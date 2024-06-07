@@ -1,0 +1,180 @@
+.nav__menu li .appointment.choose{
+    background-color: var(--white);
+    color: var(--sub-color);
+    border-radius: 50px;
+}
+
+.my-nav.active .nav__menu li .appointment.choose{
+    background-color: var(--sub-color);
+    color: var(--white);
+    border-radius: 50px;
+}
+
+.form-appointment-content{
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    margin-top: 100vh;
+    background-color:var(--white);
+}
+
+.form-appointment {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 200px 0;
+}
+
+.form-top{
+    max-width: 670px;
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.form-appointment__title{
+   position: relative;
+   font-size: 2.5rem;
+   color: var(--sub-color);
+   font-weight:600;
+   text-align: center;
+   margin-bottom: 5px;
+}
+
+.form-appointment__line{
+    height: 2px;
+    background-color: var(--sub-color);
+    width: 56px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.form-appointment__des{
+    color: var(--gray);
+    mix-blend-mode: normal;
+    font-weight: 300;
+    font-style: normal;
+    line-height: 28px;
+    margin-top: 20px;
+}
+
+.form-appointment__container {
+    position: relative;
+    max-width: 700px;
+    width: 100%;
+    background: #fff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.form-appointment__container .form {
+    margin-top: 30px;
+}
+
+.form .input-box {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.input-box label {
+    color: #333;
+}
+
+.form :where(.input-box input, .select-box) {
+    position: relative;
+    height: 50px;
+    width: 100%;
+    outline: none;
+    font-size: 1rem;
+    color: #707070;
+    margin-top: 8px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 0 15px;
+}
+
+.input-box input:focus {
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    border-color: #007bff;
+}
+
+.form .column {
+    display: flex;
+    column-gap: 15px;
+}
+
+.address :where(input, .select-box) {
+    margin-top: 15px;
+}
+
+.select-box select {
+    height: 100%;
+    width: 100%;
+    outline: none;
+    border: none;
+    color: #707070;
+    font-size: 1rem;
+}
+
+.form-appointment__btn {
+    height: 55px;
+    width: 100%;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 400;
+    margin-top: 30px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: var(--primary-color);
+    margin-bottom: 20px;
+}
+
+.form-appointment__btn:hover {
+    background-color: var(--sub-color);
+}
+
+.back-to-home {
+    font-size: 1rem;
+    color: var(--primary-color);
+    font-weight: 800;
+    cursor: pointer;
+    position: relative;
+    border: none;
+    background: none;
+    transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+    transition-duration: 400ms;
+    transition-property: color;
+}
+
+.back-to-home:focus,
+.back-to-home:hover {
+    color: var(--sub-color);
+}
+
+.back-to-home:focus::after,
+.back-to-home:hover::after {
+    width: 100%;
+    left: 0%;
+}
+
+.back-to-home::after {
+    content: "";
+    pointer-events: none;
+    bottom: -2px;
+    left: 50%;
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    background-color: var(--sub-color);
+    transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+    transition-duration: 400ms;
+    transition-property: width, left;
+}
+
+.select-box{
+    width: 100%;
+    padding: 0 0 0 10px;
+}
