@@ -1,3 +1,5 @@
+from urllib.parse import quote
+
 import cloudinary
 from dotenv import load_dotenv
 from flask import Flask
@@ -11,7 +13,7 @@ load_dotenv()
 
 app.config['SECRET_KEY'] = '1HV98N4L#&UNg?:E;82{Ef@Bftfpl9eC#DtTP~oJ"Pufpi|V)2&}_aqM/g?Pbp2'
 app.config['SECURITY_PASSWORD_SALT'] = 'fkslkfsdlkfnsdfnsfd'
-app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://root:29012003@localhost/private_clinic_db?charset=utf8mb4'
+app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://root:%s@localhost/private_clinic_db?charset=utf8mb4' % quote('Admin@123')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['MAIL_DEFAULT_SENDER'] = 'noreply@faithnhope.com'
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -33,7 +35,7 @@ login.login_view = 'authentication'
 mail = Mail(app=app)
 
 cloudinary.config(
-    cloud_name="dtthwldgs",
-    api_key="295661242477252",
-    api_secret="xKPY2fG-4h1mtZl2_PRvxsSfgtA"
+	cloud_name="dtthwldgs",
+	api_key="295661242477252",
+	api_secret="xKPY2fG-4h1mtZl2_PRvxsSfgtA"
 )
