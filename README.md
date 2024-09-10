@@ -7,8 +7,8 @@ The project provides a website for private clinics. Allows patients to choose a 
 - Clone project
 
 ```bash
-  git clone https://github.com/HiepThanhTran/Website-PCMS.git
-  cd Website-PCMS
+git clone https://github.com/HiepThanhTran/Website-PCMS.git
+cd Website-PCMS
 ```
 
 - Create a virtual environment
