@@ -43,4 +43,26 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f'mysql+pymysql://<user>:<password>@<hos
 
 ## Screenshots
 
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+### Home Page
+
+![Home Page](https://raw.githubusercontent.com/HiepThanhTran/Website-PCMS/main/images/pcms_home.png)
+
+### Login Page
+
+![Login Page](https://raw.githubusercontent.com/HiepThanhTran/Website-PCMS/main/images/pcms_login.png)
+
+### Signup Page
+
+![Signup Page](https://raw.githubusercontent.com/HiepThanhTran/Website-PCMS/main/images/pcms_signup.png)
+
+### Appointment Form
+
+![Appointment Form](https://raw.githubusercontent.com/HiepThanhTran/Website-PCMS/main/images/pcms_appointment_form.png)
+
+### Profile Page
+
+![Profile Page](https://raw.githubusercontent.com/HiepThanhTran/Website-PCMS/main/images/pcms_profile.png)
+
+### Admin Dashboard
+
+![Admin Dashboard](https://raw.githubusercontent.com/HiepThanhTran/Website-PCMS/main/images/pcms_admin_dashboard.png)
