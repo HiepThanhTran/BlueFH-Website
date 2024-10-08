@@ -4,25 +4,25 @@ ClinicEase is a project provides a website for private clinics. Allows patients 
 
 ## Installation
 
-- Clone project
+1. Clone project
 
 ```bash
 git clone https://github.com/HiepThanhTran/ClinicEase-Website.git
 ```
 
-- Create a virtual environment
+2. Create a virtual environment
 
 ```bash
 python3 -m venv venv
 ```
 
-- Activate the environment
+3. Activate the environment
 
 ```bash
 source venv/bin/activate   # On Windows: venv\Scripts\activate
 ```
 
-- Install packages from requirements.txt
+4. Install packages from requirements.txt
 
 ```bash
 pip install -r requirements.txt
