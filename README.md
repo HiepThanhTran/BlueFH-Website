@@ -1,14 +1,13 @@
-# Private Clinic Management System
+# ClinicEase - Private Clinic Management
 
-The project provides a website for private clinics. Allows patients to choose a doctor to make an appointment.
+ClinicEase is a project provides a website for private clinics. Allows patients to choose a doctor to make an appointment.
 
 ## Installation
 
 - Clone project
 
 ```bash
-git clone https://github.com/HiepThanhTran/Website-PCMS.git
-cd Website-PCMS
+git clone https://github.com/HiepThanhTran/ClinicEase-Website.git
 ```
 
 - Create a virtual environment
@@ -29,7 +28,7 @@ source venv/bin/activate   # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-## Usage/Examples
+## Run locally
 
 - Go to __init__.py change something below:
     - SQLALCHEMY_DATABASE_URI: change user, password, host, and database name
