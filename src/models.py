@@ -1,14 +1,29 @@
+import os
+import sys
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import hashlib
 from datetime import datetime
 from enum import Enum as DbEnum
 
 from flask_login import UserMixin
 from slugify import slugify
-from sqlalchemy import Column, String, Boolean, Enum, DateTime, ForeignKey, BigInteger, Double, Integer
-from sqlalchemy import event
+from sqlalchemy import (
+    BigInteger,
+    Boolean,
+    Column,
+    DateTime,
+    Double,
+    Enum,
+    ForeignKey,
+    Integer,
+    String,
+    event,
+)
 from sqlalchemy.orm import relationship
 
-from src import db, app
+from src import app, db
 
 
 class AccountRoleEnum(DbEnum):
@@ -24,11 +39,13 @@ class BaseModel(db.Model):
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
     created_date = Column(DateTime, default=datetime.now(), nullable=False)
-    updated_date = Column(DateTime, default=datetime.now(), onupdate=datetime.now(), nullable=False)
+    updated_date = Column(
+        DateTime, default=datetime.now(), onupdate=datetime.now(), nullable=False
+    )
 
 
 class Account(BaseModel, UserMixin):
-    __tablename__ = 'accounts'
+    __tablename__ = "accounts"
 
     username = Column(String(50), nullable=False, unique=True)
     password = Column(String(255), nullable=False)
@@ -36,12 +53,16 @@ class Account(BaseModel, UserMixin):
     active = Column(Boolean, default=True, nullable=False)
     is_confirmed = Column(Boolean, nullable=False, default=False)
     confirmed_on = Column(DateTime, nullable=True)
-    avatar = Column(String(255),
-                    default='https://res.cloudinary.com/dtthwldgs/image/upload/v1704344793/robot-head-avatar-design-cartoon-robot-head'
-                            '-icon-vector-removebg-preview_lb3smh.png')
-    role = Column(Enum(AccountRoleEnum), default=AccountRoleEnum.PATIENT, nullable=False)
+    avatar = Column(
+        String(255),
+        default="https://res.cloudinary.com/dtthwldgs/image/upload/v1704344793/robot-head-avatar-design-cartoon-robot-head"
+        "-icon-vector-removebg-preview_lb3smh.png",
+    )
+    role = Column(
+        Enum(AccountRoleEnum), default=AccountRoleEnum.PATIENT, nullable=False
+    )
 
-    user = relationship('User', backref='account', lazy=True, uselist=False)
+    user = relationship("User", backref="account", lazy=True, uselist=False)
 
     def __str__(self):
         return self.username
@@ -52,11 +73,11 @@ class Account(BaseModel, UserMixin):
             target.slug = slugify(value)
 
 
-event.listen(Account.username, 'set', Account.slugify, retval=False)
+event.listen(Account.username, "set", Account.slugify, retval=False)
 
 
 class User(BaseModel):
-    __tablename__ = 'users'
+    __tablename__ = "users"
 
     first_name = Column(String(50), nullable=False)
     last_name = Column(String(50), nullable=False)
@@ -65,114 +86,125 @@ class User(BaseModel):
     address = Column(String(100))
     phone_number = Column(String(11), unique=True)
     email = Column(String(50), nullable=False, unique=True)
-    account_id = Column(BigInteger, ForeignKey('accounts.id', ondelete='CASCADE'), nullable=False, unique=True)
+    account_id = Column(
+        BigInteger,
+        ForeignKey("accounts.id", ondelete="CASCADE"),
+        nullable=False,
+        unique=True,
+    )
 
-    patient = relationship('Patient', backref='user', lazy=True, uselist=False)
-    employee = relationship('Employee', backref='user', lazy=True, uselist=False)
+    patient = relationship("Patient", backref="user", lazy=True, uselist=False)
+    employee = relationship("Employee", backref="user", lazy=True, uselist=False)
 
     @property
     def full_name(self):
-        return self.last_name + ' ' + self.first_name
+        return self.last_name + " " + self.first_name
 
     def __str__(self):
         return self.full_name
 
 
 class Patient(db.Model):
-    __tablename__ = 'patients'
+    __tablename__ = "patients"
 
-    id = Column(BigInteger, ForeignKey('users.id'), primary_key=True)
+    id = Column(BigInteger, ForeignKey("users.id"), primary_key=True)
     insurance_id = Column(String(20), unique=True)
 
-    bills = relationship('Bill', backref='patient', lazy=True)
-    medical_bills = relationship('MedicalBill', backref='patient', lazy=True)
-    examination_schedule_list = relationship('ExaminationSchedule', backref='patient', lazy=True)
+    bills = relationship("Bill", backref="patient", lazy=True)
+    medical_bills = relationship("MedicalBill", backref="patient", lazy=True)
+    examination_schedule_list = relationship(
+        "ExaminationSchedule", backref="patient", lazy=True
+    )
 
 
 class Employee(db.Model):
-    __tablename__ = 'employees'
+    __tablename__ = "employees"
 
-    id = Column(BigInteger, ForeignKey('users.id'), primary_key=True)
+    id = Column(BigInteger, ForeignKey("users.id"), primary_key=True)
     salary = Column(Double, default=0)
     salary_coefficient = Column(Double, default=1)
 
-    admin = relationship('Administrator', backref='employee', lazy=True, uselist=False)
-    cashier = relationship('Cashier', backref='employee', lazy=True, uselist=False)
-    doctor = relationship('Doctor', backref='employee', lazy=True, uselist=False)
-    nurse = relationship('Nurse', backref='employee', lazy=True, uselist=False)
+    admin = relationship("Administrator", backref="employee", lazy=True, uselist=False)
+    cashier = relationship("Cashier", backref="employee", lazy=True, uselist=False)
+    doctor = relationship("Doctor", backref="employee", lazy=True, uselist=False)
+    nurse = relationship("Nurse", backref="employee", lazy=True, uselist=False)
 
 
 class Administrator(db.Model):
-    __tablename__ = 'administrators'
+    __tablename__ = "administrators"
 
-    id = Column(BigInteger, ForeignKey('employees.id'), primary_key=True)
+    id = Column(BigInteger, ForeignKey("employees.id"), primary_key=True)
     inauguration_day = Column(DateTime, nullable=False)
 
-    regulations = relationship('Regulation', backref='administrator', lazy=True)
+    regulations = relationship("Regulation", backref="administrator", lazy=True)
 
 
 class Cashier(db.Model):
-    __tablename__ = 'cashiers'
+    __tablename__ = "cashiers"
 
-    id = Column(BigInteger, ForeignKey('employees.id'), primary_key=True)
+    id = Column(BigInteger, ForeignKey("employees.id"), primary_key=True)
     skills = Column(String(100))
 
-    bills = relationship('Bill', backref='cashier', lazy=True)
+    bills = relationship("Bill", backref="cashier", lazy=True)
 
 
 class Nurse(db.Model):
-    __tablename__ = 'nurses'
+    __tablename__ = "nurses"
 
-    id = Column(BigInteger, ForeignKey('employees.id'), primary_key=True)
+    id = Column(BigInteger, ForeignKey("employees.id"), primary_key=True)
     educational_attainment = Column(String(100), nullable=False)
 
 
 class Doctor(db.Model):
-    __tablename__ = 'doctors'
+    __tablename__ = "doctors"
 
-    id = Column(BigInteger, ForeignKey('employees.id'), primary_key=True)
+    id = Column(BigInteger, ForeignKey("employees.id"), primary_key=True)
     specialist = Column(String(100), nullable=False)
     years_of_experience = Column(Integer, nullable=False)
 
-    medical_bills = relationship('MedicalBill', backref='doctor', lazy=True)
+    medical_bills = relationship("MedicalBill", backref="doctor", lazy=True)
 
 
 class Regulation(BaseModel):
-    __tablename__ = 'regulations'
+    __tablename__ = "regulations"
 
     regulation_name = Column(String(50), nullable=False, unique=True)
     regulation_code = Column(String(50), nullable=False, unique=True)
     description = Column(String(100))
     status = Column(Boolean, nullable=False, default=True)
-    admin_id = Column(BigInteger, ForeignKey('administrators.id'), nullable=False)
+    admin_id = Column(BigInteger, ForeignKey("administrators.id"), nullable=False)
 
     def __str__(self):
         return self.regulation_name
 
 
 class Bill(BaseModel):
-    __tablename__ = 'bills'
+    __tablename__ = "bills"
 
     medicine_money = Column(Double, nullable=False)
     pre_examination = Column(Double, nullable=False)
     total_price = Column(Double, nullable=False)
     examination_date = Column(DateTime, nullable=False)
-    cashier_id = Column(BigInteger, ForeignKey('cashiers.id'), nullable=False)
-    patient_id = Column(BigInteger, ForeignKey('patients.id'), nullable=False)
-    medical_bill_id = Column(BigInteger, ForeignKey('medical_bills.id'), nullable=False, unique=True)
+    cashier_id = Column(BigInteger, ForeignKey("cashiers.id"), nullable=False)
+    patient_id = Column(BigInteger, ForeignKey("patients.id"), nullable=False)
+    medical_bill_id = Column(
+        BigInteger, ForeignKey("medical_bills.id"), nullable=False, unique=True
+    )
 
 
 class ExaminationList(BaseModel):
-    __tablename__ = 'examination_list'
+    __tablename__ = "examination_list"
 
     examination_date = Column(DateTime, nullable=False)
-    nurse_id = Column(BigInteger, ForeignKey('nurses.id'), nullable=False)
+    nurse_id = Column(BigInteger, ForeignKey("nurses.id"), nullable=False)
 
-    examination_schedule_list = relationship('ExaminationSchedule', backref='examination_list', lazy=True)
+    examination_schedule_list = relationship(
+        "ExaminationSchedule", backref="examination_list", lazy=True
+    )
 
 
 class ExaminationSchedule(BaseModel):
-    __tablename__ = 'examination_schedule'
+    __tablename__ = "examination_schedule"
 
     dob = Column(DateTime, nullable=False)
     status = Column(Boolean, default=False)
@@ -183,12 +215,12 @@ class ExaminationSchedule(BaseModel):
     first_name = Column(String(50), nullable=False)
     phone_number = Column(String(11), nullable=False)
     examination_date = Column(DateTime, nullable=False)
-    examination_list_id = Column(BigInteger, ForeignKey('examination_list.id'))
-    patient_id = Column(BigInteger, ForeignKey('patients.id', ondelete='CASCADE'))
+    examination_list_id = Column(BigInteger, ForeignKey("examination_list.id"))
+    patient_id = Column(BigInteger, ForeignKey("patients.id", ondelete="CASCADE"))
 
 
 class Medicine(BaseModel):
-    __tablename__ = 'medicines'
+    __tablename__ = "medicines"
 
     medicine_name = Column(String(20), nullable=False, unique=True)
     description = Column(String(100))
@@ -197,10 +229,14 @@ class Medicine(BaseModel):
     amount = Column(Integer, default=0)
     image = Column(String(255))
     direction_for_use = Column(String(100))
-    medicine_type_id = Column(BigInteger, ForeignKey('medicine_type.id'), nullable=False)
-    medicine_unit_id = Column(BigInteger, ForeignKey('medicine_unit.id'), nullable=False)
+    medicine_type_id = Column(
+        BigInteger, ForeignKey("medicine_type.id"), nullable=False
+    )
+    medicine_unit_id = Column(
+        BigInteger, ForeignKey("medicine_unit.id"), nullable=False
+    )
 
-    medical_bills = relationship('Prescription', backref='medicines', lazy=True)
+    medical_bills = relationship("Prescription", backref="medicines", lazy=True)
 
     def __str__(self):
         return self.medicine_name
@@ -211,63 +247,65 @@ class Medicine(BaseModel):
             target.slug = slugify(value)
 
 
-event.listen(Medicine.medicine_name, 'set', Medicine.slugify, retval=False)
+event.listen(Medicine.medicine_name, "set", Medicine.slugify, retval=False)
 
 
 class MedicineType(BaseModel):
-    __tablename__ = 'medicine_type'
+    __tablename__ = "medicine_type"
 
     type_of_medicine = Column(String(20), nullable=False, unique=True)
 
-    medicines = relationship('Medicine', backref='medicine_type', lazy=True)
+    medicines = relationship("Medicine", backref="medicine_type", lazy=True)
 
     def __str__(self):
         return self.type_of_medicine
 
 
 class MedicineUnit(BaseModel):
-    __tablename__ = 'medicine_unit'
+    __tablename__ = "medicine_unit"
 
     unit_name = Column(String(20), nullable=False, unique=True)
 
-    medicines = relationship('Medicine', backref='medicine_unit', lazy=True)
+    medicines = relationship("Medicine", backref="medicine_unit", lazy=True)
 
     def __str__(self):
         return self.unit_name
 
 
 class MedicalBill(BaseModel):
-    __tablename__ = 'medical_bills'
+    __tablename__ = "medical_bills"
 
     symptoms = Column(String(100))
     diagnostic = Column(String(100))
     is_pay = Column(Boolean, default=False)
     examination_date = Column(DateTime, nullable=False)
-    patient_id = Column(BigInteger, ForeignKey('patients.id'), nullable=False)
-    doctor_id = Column(BigInteger, ForeignKey('doctors.id'), nullable=False)
-    packages_id = Column(BigInteger, ForeignKey('packages.id'), nullable=False)
+    patient_id = Column(BigInteger, ForeignKey("patients.id"), nullable=False)
+    doctor_id = Column(BigInteger, ForeignKey("doctors.id"), nullable=False)
+    packages_id = Column(BigInteger, ForeignKey("packages.id"), nullable=False)
 
-    bill = relationship('Bill', backref='medical_bill', lazy=True, uselist=False)
-    medicines = relationship('Prescription', backref='medical_bills', lazy=True)
+    bill = relationship("Bill", backref="medical_bill", lazy=True, uselist=False)
+    medicines = relationship("Prescription", backref="medical_bills", lazy=True)
 
 
 class Prescription(BaseModel):
-    __tablename__ = 'prescriptions'
+    __tablename__ = "prescriptions"
 
     note = Column(String(100))
     amount = Column(Integer, nullable=False)
-    medicine_id = Column(BigInteger, ForeignKey('medicines.id'), primary_key=True)
-    medical_bill_id = Column(BigInteger, ForeignKey('medical_bills.id'), primary_key=True)
+    medicine_id = Column(BigInteger, ForeignKey("medicines.id"), primary_key=True)
+    medical_bill_id = Column(
+        BigInteger, ForeignKey("medical_bills.id"), primary_key=True
+    )
 
 
 class Packages(BaseModel):
-    __tablename__ = 'packages'
+    __tablename__ = "packages"
 
     packages_name = Column(String(20), nullable=False, unique=True)
     price = Column(Double, nullable=False, default=0)
     slug = Column(String(50), nullable=False)
 
-    medical_bills = relationship('MedicalBill', backref='packages', lazy=True)
+    medical_bills = relationship("MedicalBill", backref="packages", lazy=True)
 
     def __str__(self):
         return self.packages_name
@@ -278,69 +316,110 @@ class Packages(BaseModel):
             target.slug = slugify(value)
 
 
-event.listen(Packages.packages_name, 'set', Packages.slugify, retval=False)
+event.listen(Packages.packages_name, "set", Packages.slugify, retval=False)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     with app.app_context():
         db.create_all()
 
         account_patient = Account(
             username="patient1",
-            password=str(hashlib.md5("123456".strip().encode('utf-8')).hexdigest()),
+            password=str(hashlib.md5("123456".strip().encode("utf-8")).hexdigest()),
             role=AccountRoleEnum.PATIENT,
             is_confirmed=True,
-            confirmed_on=datetime.now()
+            confirmed_on=datetime.now(),
         )
         account_cashier = Account(
             username="cashier1",
-            password=str(hashlib.md5("123456".strip().encode('utf-8')).hexdigest()),
+            password=str(hashlib.md5("123456".strip().encode("utf-8")).hexdigest()),
             role=AccountRoleEnum.STAFF,
             is_confirmed=True,
-            confirmed_on=datetime.now()
+            confirmed_on=datetime.now(),
         )
         account_nurse = Account(
             username="nurse1",
-            password=str(hashlib.md5("123456".strip().encode('utf-8')).hexdigest()),
+            password=str(hashlib.md5("123456".strip().encode("utf-8")).hexdigest()),
             role=AccountRoleEnum.NURSE,
             is_confirmed=True,
-            confirmed_on=datetime.now()
+            confirmed_on=datetime.now(),
         )
         account_doctor = Account(
             username="doctor1",
-            password=str(hashlib.md5("123456".strip().encode('utf-8')).hexdigest()),
+            password=str(hashlib.md5("123456".strip().encode("utf-8")).hexdigest()),
             role=AccountRoleEnum.DOCTOR,
             is_confirmed=True,
-            confirmed_on=datetime.now()
+            confirmed_on=datetime.now(),
         )
         account_admin = Account(
             username="admin1",
-            password=str(hashlib.md5("123456".strip().encode('utf-8')).hexdigest()),
+            password=str(hashlib.md5("123456".strip().encode("utf-8")).hexdigest()),
             role=AccountRoleEnum.ADMIN,
             is_confirmed=True,
-            confirmed_on=datetime.now()
+            confirmed_on=datetime.now(),
         )
-        db.session.add_all([account_patient, account_cashier, account_nurse, account_doctor, account_admin])
+        db.session.add_all(
+            [
+                account_patient,
+                account_cashier,
+                account_nurse,
+                account_doctor,
+                account_admin,
+            ]
+        )
         db.session.commit()
 
-        user_patient = User(first_name="Patient1", last_name="", email="patient1@gmail.com", account_id=account_patient.id)
-        user_cashier = User(first_name="Cashier1", last_name="", email="cashier1@gmail.com", account_id=account_cashier.id)
-        user_nurse = User(first_name="Nurse1", last_name="", email="nurse1@gmail.com", account_id=account_nurse.id)
-        user_doctor = User(first_name="Doctor1", last_name="", email="doctor1@gmail.com", account_id=account_doctor.id)
-        user_admin = User(first_name="Admin1", last_name="", email="admin1@gmail.com", account_id=account_admin.id)
-        db.session.add_all([user_patient, user_cashier, user_nurse, user_doctor, user_admin])
+        user_patient = User(
+            first_name="Patient1",
+            last_name="",
+            email="patient1@gmail.com",
+            account_id=account_patient.id,
+        )
+        user_cashier = User(
+            first_name="Cashier1",
+            last_name="",
+            email="cashier1@gmail.com",
+            account_id=account_cashier.id,
+        )
+        user_nurse = User(
+            first_name="Nurse1",
+            last_name="",
+            email="nurse1@gmail.com",
+            account_id=account_nurse.id,
+        )
+        user_doctor = User(
+            first_name="Doctor1",
+            last_name="",
+            email="doctor1@gmail.com",
+            account_id=account_doctor.id,
+        )
+        user_admin = User(
+            first_name="Admin1",
+            last_name="",
+            email="admin1@gmail.com",
+            account_id=account_admin.id,
+        )
+        db.session.add_all(
+            [user_patient, user_cashier, user_nurse, user_doctor, user_admin]
+        )
         db.session.commit()
 
         employee_cashier = Employee(id=user_cashier.id)
         employee_nurse = Employee(id=user_nurse.id)
         employee_doctor = Employee(id=user_doctor.id)
         employee_admin = Employee(id=user_admin.id)
-        db.session.add_all([employee_cashier, employee_nurse, employee_doctor, employee_admin])
+        db.session.add_all(
+            [employee_cashier, employee_nurse, employee_doctor, employee_admin]
+        )
         db.session.commit()
 
         patient = Patient(id=user_patient.id)
         cashier = Cashier(id=employee_cashier.id)
-        nurse = Nurse(id=employee_nurse.id, educational_attainment="educational_attainment")
-        doctor = Doctor(id=employee_doctor.id, specialist="specialist", years_of_experience=5)
+        nurse = Nurse(
+            id=employee_nurse.id, educational_attainment="educational_attainment"
+        )
+        doctor = Doctor(
+            id=employee_doctor.id, specialist="specialist", years_of_experience=5
+        )
         admin = Administrator(id=employee_admin.id, inauguration_day=datetime.now())
         db.session.add_all([patient, cashier, nurse, doctor, admin])
         db.session.commit()

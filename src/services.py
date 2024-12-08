@@ -1,9 +1,13 @@
+import os
+import sys
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from urllib.parse import urlparse
 
 from flask_mail import Message
 
-from src import dao
-from src import app, mail
+from src import app, dao, mail
 
 
 def is_safe_url(url, allowed_hosts):
@@ -12,7 +16,14 @@ def is_safe_url(url, allowed_hosts):
 
 
 def send_email(to, subject, template):
-    return mail.send(Message(subject=subject, recipients=[to], html=template, sender=app.config['MAIL_DEFAULT_SENDER']))
+    return mail.send(
+        Message(
+            subject=subject,
+            recipients=[to],
+            html=template,
+            sender=app.config["MAIL_DEFAULT_SENDER"],
+        )
+    )
 
 
 def authenticate(username, password):
@@ -28,11 +39,15 @@ def check_duplicate_email(email, current_user_id):
 
 
 def check_duplicate_phone_number(phone_number, current_user_id):
-    return dao.check_duplicate_phone_number(phone_number=phone_number, current_user_id=current_user_id)
+    return dao.check_duplicate_phone_number(
+        phone_number=phone_number, current_user_id=current_user_id
+    )
 
 
 def check_duplicate_insurance_id(insurance_id, current_user_id):
-    return dao.check_duplicate_insurance_id(insurance_id=insurance_id, current_user_id=current_user_id)
+    return dao.check_duplicate_insurance_id(
+        insurance_id=insurance_id, current_user_id=current_user_id
+    )
 
 
 def count_examination_schedule_by_date(date):
@@ -68,7 +83,9 @@ def create_account(username, password, **kwargs):
 
 
 def create_user(first_name, last_name, email, account_id):
-    return dao.create_user(first_name=first_name, last_name=last_name, email=email, account_id=account_id)
+    return dao.create_user(
+        first_name=first_name, last_name=last_name, email=email, account_id=account_id
+    )
 
 
 def create_patient(patient_id):
@@ -80,7 +97,9 @@ def create_employee(employee_id):
 
 
 def create_administrator(administrator_id, inauguration_day):
-    return dao.create_administrator(administrator_id=administrator_id, inauguration_day=inauguration_day)
+    return dao.create_administrator(
+        administrator_id=administrator_id, inauguration_day=inauguration_day
+    )
 
 
 def create_cashier(cashier_id):
@@ -88,27 +107,47 @@ def create_cashier(cashier_id):
 
 
 def create_nurse(nurse_id, educational_attainment):
-    return dao.create_nurse(nurse_id=nurse_id, educational_attainment=educational_attainment)
+    return dao.create_nurse(
+        nurse_id=nurse_id, educational_attainment=educational_attainment
+    )
 
 
 def create_doctor(doctor_id, specialist, years_of_experience):
-    return dao.create_doctor(doctor_id=doctor_id, specialist=specialist, years_of_experience=years_of_experience)
+    return dao.create_doctor(
+        doctor_id=doctor_id,
+        specialist=specialist,
+        years_of_experience=years_of_experience,
+    )
 
 
 def create_examination_schedule(patient_id, examination_date, **kwargs):
-    return dao.create_examination_schedule(patient_id=patient_id, examination_date=examination_date, **kwargs)
+    return dao.create_examination_schedule(
+        patient_id=patient_id, examination_date=examination_date, **kwargs
+    )
 
 
 def create_examination_list(examination_date, nurse_id, examination_schedule_id_list):
-    return dao.create_examination_list(examination_date=examination_date, nurse_id=nurse_id,
-                                       examination_schedule_id_list=examination_schedule_id_list)
+    return dao.create_examination_list(
+        examination_date=examination_date,
+        nurse_id=nurse_id,
+        examination_schedule_id_list=examination_schedule_id_list,
+    )
 
 
 def create_medicine(**kwargs):
     return dao.create_medicine(**kwargs)
 
 
-def create_medical_bill(symptoms, diagnostic, examination_date, patient_id, doctor_id, packages_id, amount, medicine_id_list):
+def create_medical_bill(
+    symptoms,
+    diagnostic,
+    examination_date,
+    patient_id,
+    doctor_id,
+    packages_id,
+    amount,
+    medicine_id_list,
+):
     return dao.create_medical_bill(
         symptoms=symptoms,
         diagnostic=diagnostic,
@@ -117,10 +156,19 @@ def create_medical_bill(symptoms, diagnostic, examination_date, patient_id, doct
         doctor_id=doctor_id,
         packages_id=packages_id,
         amount=amount,
-        medicine_id_list=medicine_id_list)
+        medicine_id_list=medicine_id_list,
+    )
 
 
-def create_bill(patient_id, examination_date, pre_examination, medicine_money, total_price, medical_bill_id, cashier_id):
+def create_bill(
+    patient_id,
+    examination_date,
+    pre_examination,
+    medicine_money,
+    total_price,
+    medical_bill_id,
+    cashier_id,
+):
     return dao.create_bill(
         patient_id=patient_id,
         examination_date=examination_date,
@@ -128,7 +176,7 @@ def create_bill(patient_id, examination_date, pre_examination, medicine_money, t
         medicine_money=medicine_money,
         total_price=total_price,
         medical_bill_id=medical_bill_id,
-        cashier_id=cashier_id
+        cashier_id=cashier_id,
     )
 
 
@@ -141,7 +189,9 @@ def update_profile_user(user, **kwargs):
 
 
 def update_examination_schedule(examination_schedule_id, **kwargs):
-    return dao.update_examination_schedule(examination_schedule_id=examination_schedule_id, **kwargs)
+    return dao.update_examination_schedule(
+        examination_schedule_id=examination_schedule_id, **kwargs
+    )
 
 
 def get_role_list():
